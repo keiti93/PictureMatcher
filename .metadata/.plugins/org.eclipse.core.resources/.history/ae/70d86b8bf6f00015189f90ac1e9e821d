@@ -1,0 +1,119 @@
+package ontotext.task;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+public class test {
+	public static void main(String[] args) throws IOException, ParseException{
+	JSONParser parser = new JSONParser();
+	HashMap<String, Set<String>> pictures = new HashMap<String, Set<String>> ();
+
+		try {
+			Object  obj = parser.parse(new FileReader("C://Users/keiti93/Desktop/ontotext.json"));
+		
+			JSONObject jsonObject = (JSONObject) obj;
+		
+		JSONObject album = (JSONObject) jsonObject.get("albums");
+		JSONArray data = (JSONArray) album.get("data");
+		//System.out.println("data: " + data);
+		
+		Iterator<JSONObject> iterator = data.iterator();
+		while (iterator.hasNext()){
+			JSONObject alb = (JSONObject) iterator.next();
+			
+			//System.out.println(alb);
+			//System.out.println();
+			
+			JSONObject photos = (JSONObject) alb.get("photos");
+			
+			//System.out.println(photos);
+			//System.out.println();
+			
+			JSONArray dataPhotos = (JSONArray) photos.get("data");
+			
+			//System.out.println(dataPhotos);
+			//System.out.println();
+			
+			Iterator<JSONObject> iterator2 = dataPhotos.iterator();
+			while (iterator2.hasNext()){
+				//System.out.println(iterator2.next());
+				//System.out.println();
+				JSONObject pic = (JSONObject) iterator2.next();
+				String id = (String) pic.get("id");
+				
+				Set<String> words = new HashSet<>();
+				
+				String[] wordsName = new String[0];
+				String name = (String) pic.get("name");
+				if(name!=null){
+					wordsName = name.split("[ ,.!?:;()\"\r\n]+");
+				}
+				
+//				for(String s: wordsName){
+//					if(s != null || !s.equals("\r\n") || !s.equals("")) {
+//						System.out.println(s);
+//					}
+//				}
+				
+				for(String word : wordsName) {
+					if(word != null || !word.equals("\r\n") || !word.equals(""))
+					words.add(word.trim());
+				}
+				
+//				for(String w:words){
+//					System.out.println("\\\\\\\\\\\\\\\\\\");
+//					System.out.println(w);
+//				}
+				
+				pictures.put(id, words);
+				
+			}
+		}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		for (String name: pictures.keySet()){
+
+            String key =name.toString();
+            Set<String> value = pictures.get(name);  
+            System.out.println(key + " " + value);  
+
+
+} 
+		/*//C:\Users\keiti93\Desktop
+		try{Object obj = parser.parse(new FileReader("C://Users/keiti93/Desktop/ontotext.json"));
+		JSONObject object = new JSONObject("ontotext.json")
+		
+		/*JSONObject jsonObject = (JSONObject) obj;
+		
+		String name = (String) jsonObject.get("id");
+		
+		JSONArray data = (JSONArray) jsonObject.get("data");
+		
+		
+		Iterator<String> iterator = data.iterator();
+		while (iterator.hasNext()){
+			System.out.println(iterator.next());
+			
+			
+		System.out.println("id: " + name );
+		/*Iterator<String> iterator = date.iterator();
+		while (iterator.hasNext()){
+			System.out.println(iterator.next());
+		}*/
+		
+	}}
