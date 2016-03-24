@@ -167,7 +167,6 @@ public class JumbledPics {
 									words.add(word.trim().toLowerCase());
 								}
 							}
-							;
 						}
 					}
 
